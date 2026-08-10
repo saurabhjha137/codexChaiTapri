@@ -18,9 +18,6 @@ export function MusicPlayer() {
 
   const [ytState, ytControls] = useYouTubePlayer(YT_ELEMENT_ID, firstVideoId, playlistId)
 
-  const statusLabel =
-    ytState.status === 'error' ? 'Playback error' : ytState.status === 'loading' ? 'Loading…' : 'Curated playlist'
-
   return (
     <section className={`player-shell youtube-shell mode-${mode} source-${source}`} aria-label="Chai Ki Tapri music player">
       <div className="source-toggle" role="tablist" aria-label="Choose music source">
@@ -54,16 +51,7 @@ export function MusicPlayer() {
 
           {mode === 'video' ? (
             <div className="youtube-details">
-              <span className="status">
-                <i />
-                <span>{statusLabel}</span>
-              </span>
               <h2>{ytState.title ?? 'Tapri ke gaane'}</h2>
-              <p>Use the player controls to play, pause, seek, or move through the full playlist.</p>
-              <div className="playlist-meta">
-                <YouTubeMusicLogo />
-                <span>YouTube Music · Full playlist</span>
-              </div>
               <a href={siteConfig.youtubeMusicUrl} target="_blank" rel="noreferrer">
                 Open in YouTube Music <ExternalLink size={13} />
               </a>

@@ -45,17 +45,21 @@ vi.mock('../lib/spotifyIframeApi', () => ({
     }),
 }))
 
+async function waitUntilReady() {
+  await waitFor(() => expect(screen.getByRole('button', { name: 'Play' })).toBeEnabled())
+}
+
 describe('SpotifyPlayer', () => {
-  it('shows Ready once the embed controller connects, and never autoplays', async () => {
+  it('becomes playable once the embed controller connects, and never autoplays', async () => {
     render(<SpotifyPlayer />)
-    await waitFor(() => expect(screen.getByText('Ready')).toBeInTheDocument())
+    await waitUntilReady()
     expect(screen.getByRole('button', { name: 'Play' })).toBeInTheDocument()
   })
 
   it('toggles play/pause via the custom transport', async () => {
     const user = userEvent.setup()
     render(<SpotifyPlayer />)
-    await waitFor(() => expect(screen.getByText('Ready')).toBeInTheDocument())
+    await waitUntilReady()
 
     await user.click(screen.getByRole('button', { name: 'Play' }))
     await waitFor(() => expect(screen.getByRole('button', { name: 'Pause' })).toBeInTheDocument())
@@ -66,13 +70,16 @@ describe('SpotifyPlayer', () => {
 
   it('disables next/previous when siteConfig.spotify.tracks has fewer than two entries', async () => {
     render(<SpotifyPlayer />)
-    await waitFor(() => expect(screen.getByText('Ready')).toBeInTheDocument())
+    await waitUntilReady()
     expect(screen.getByRole('button', { name: 'Next track' })).toBeDisabled()
     expect(screen.getByRole('button', { name: 'Previous track' })).toBeDisabled()
   })
 
-  it('shows the Premium/preview note', () => {
+  it('surfaces the Premium/preview caveat on the play button as a tooltip', () => {
     render(<SpotifyPlayer />)
-    expect(screen.getByText(/full playback requires being signed into spotify/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Play' })).toHaveAttribute(
+      'title',
+      expect.stringMatching(/full playback requires being signed into spotify/i),
+    )
   })
 })

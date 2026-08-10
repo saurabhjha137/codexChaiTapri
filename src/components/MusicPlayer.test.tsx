@@ -138,7 +138,7 @@ describe('MusicPlayer', () => {
 
     expect(screen.getByRole('tab', { name: /spotify/i })).toHaveAttribute('aria-selected', 'true')
     expect(screen.getByRole('tab', { name: /youtube/i })).toHaveAttribute('aria-selected', 'false')
-    await waitFor(() => expect(screen.getByText('Ready')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Play' })).toBeEnabled())
     // Next/Previous stay disabled by default (empty siteConfig.spotify.tracks).
     expect(screen.getByRole('button', { name: 'Next track' })).toBeDisabled()
   })

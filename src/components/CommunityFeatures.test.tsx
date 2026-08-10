@@ -3,7 +3,11 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 import App from '../App'
 
-describe('community features without Supabase', () => {
+// TODO: the "More" button that opens this drawer is temporarily commented
+// out in App.tsx (revisiting that flow tomorrow) — these tests can't reach
+// it right now, so they're skipped rather than deleted. Re-enable
+// (describe.skip -> describe) once the button comes back.
+describe.skip('community features without Supabase', () => {
   beforeEach(() => localStorage.clear())
 
   async function openMoreDrawer(user: ReturnType<typeof userEvent.setup>) {

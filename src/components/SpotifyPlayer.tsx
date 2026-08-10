@@ -2,23 +2,16 @@ import { Pause, Play, SkipBack, SkipForward } from 'lucide-react'
 import { siteConfig } from '../config/siteConfig'
 import { useSpotifyPlayer } from '../hooks/useSpotifyPlayer'
 import { spotifyUrlToUri } from '../utils/spotifyUrl'
-import { SpotifyLogo } from './BrandIcons'
 
 const SPOTIFY_ELEMENT_ID = 'chai-tapri-spotify-player'
+const PREMIUM_NOTE =
+  'Full playback requires being signed into Spotify (Premium) in this browser — otherwise Spotify plays a 30-second preview.'
 
 function formatTime(seconds: number): string {
   if (!Number.isFinite(seconds) || seconds < 0) return '0:00'
   const m = Math.floor(seconds / 60)
   const s = Math.floor(seconds % 60)
   return `${m}:${s.toString().padStart(2, '0')}`
-}
-
-const STATUS_LABEL: Record<string, string> = {
-  loading: 'Loading…',
-  ready: 'Ready',
-  playing: 'Playing',
-  paused: 'Paused',
-  buffering: 'Buffering…',
 }
 
 /**
@@ -47,12 +40,7 @@ export function SpotifyPlayer() {
     <div className="spotify-player">
       <div id={SPOTIFY_ELEMENT_ID} className="spotify-embed" />
 
-      <div className="spotify-status">
-        <SpotifyLogo />
-        <span>{STATUS_LABEL[state.status]}</span>
-      </div>
-
-      {trackLabel && <p className="spotify-track-label">{trackLabel}</p>}
+      <h3 className="radio-title">{trackLabel ?? 'Tapri ke gaane'}</h3>
 
       <div className="radio-transport">
         <button
@@ -70,6 +58,7 @@ export function SpotifyPlayer() {
           onClick={controls.togglePlay}
           aria-label={state.status === 'playing' ? 'Pause' : 'Play'}
           disabled={state.status === 'loading'}
+          title={PREMIUM_NOTE}
         >
           {state.status === 'playing' ? <Pause size={17} /> : <Play size={17} />}
         </button>
@@ -98,11 +87,6 @@ export function SpotifyPlayer() {
         />
         <time>{formatTime(state.duration)}</time>
       </div>
-
-      <p className="spotify-note">
-        Full playback requires being signed into Spotify (Premium) in this browser — otherwise Spotify plays a
-        30-second preview.
-      </p>
     </div>
   )
 }

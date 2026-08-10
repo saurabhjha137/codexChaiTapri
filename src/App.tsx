@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Menu, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { AmbientMixer } from './components/AmbientMixer'
 import { Header } from './components/Header'
 import { HeroBrand } from './components/HeroBrand'
@@ -52,16 +52,23 @@ export default function App() {
       <Header />
       <FloatingReactions onReaction={realtimeRoom.onReaction} />
 
-      {/* One focal stage: the title and the song are the whole point. */}
+      {/* One focal stage: the title and the song are the whole point.
+          Player docks left, title + reactions stay centred. */}
       <div className="stage">
-        <HeroBrand />
         <div className="player-dock">
           <MusicPlayer />
           <SceneSelector scene={scene} auto={auto} onSelectScene={selectScene} onSelectAuto={selectAuto} />
         </div>
+        <div className="stage-center">
+          <HeroBrand />
+          <ReactionBar sendReaction={realtimeRoom.sendReaction} />
+        </div>
       </div>
 
-      <button
+      {/* TODO: re-enable — commented out for now, revisiting the "More"
+          drawer tomorrow. The drawer JSX below is left in place (just
+          unreachable without this trigger) so it's ready to pick back up. */}
+      {/* <button
         type="button"
         className="menu-toggle"
         aria-expanded={menuOpen}
@@ -70,7 +77,7 @@ export default function App() {
       >
         <Menu size={15} />
         <span>More</span>
-      </button>
+      </button> */}
 
       {menuOpen && (
         <div className="drawer-backdrop" onClick={() => setMenuOpen(false)}>
@@ -90,11 +97,6 @@ export default function App() {
             <div className="drawer-group">
               <span className="drawer-group-label">Ambience</span>
               <AmbientMixer layers={ambient.layers} onVolumeChange={ambient.setLayerVolume} onToggleMute={ambient.toggleLayerMute} />
-            </div>
-
-            <div className="drawer-group">
-              <span className="drawer-group-label">React</span>
-              <ReactionBar sendReaction={realtimeRoom.sendReaction} />
             </div>
 
             <div className="drawer-group drawer-group-links">
